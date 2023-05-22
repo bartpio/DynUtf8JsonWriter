@@ -68,19 +68,25 @@ namespace DynUtf8JsonWriter
 
         internal static string GenWriterMethod(string method, string type, string reader)
         {
-            return $@"[DynamicJsonWriteValue(typeof({CleanType(type)}), ""{CleanType(type)}"", ""{reader}"")]
-        public string WriteValue({type} value)
+            return $@"
+        /// <summary>
+        /// Write value to the wrapped writer, and provide the name of the type that the value was interpreted as.
+        /// </summary>
+        /// <param name=""value"">Value to write.</param>
+        /// <returns>The string ""{CleanType(type)}"".</returns>
+        [DynamicJsonWriteValue(typeof({CleanType(type)}), ""{CleanType(type)}"", ""{method}"", ""{reader}"")]
+        public string WriteValue({MakeNotNulla(type)} value)
         {{
             Writer.{method}(value);
             return ""{CleanType(type)}"";
         }}";
         }
 
-        internal static string CleanType(string typeName)
-        {
-            return typeName.Replace("?", "").Replace("System.", "");
-        }
+        internal static string CleanType(string typeName) =>
+            MakeNotNulla(typeName).Replace("System.", "");
 
+        internal static string MakeNotNulla(string typeName) =>
+            typeName.Replace("?", "");
 
         public void Initialize(GeneratorInitializationContext context)
         {

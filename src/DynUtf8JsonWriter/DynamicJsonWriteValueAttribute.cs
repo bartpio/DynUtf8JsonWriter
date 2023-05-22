@@ -10,7 +10,7 @@ namespace DynUtf8JsonWriter
     public sealed class DynamicJsonWriteValueAttribute : Attribute
     {
         /// <summary>
-        /// The type handled by this overload.
+        /// The type handled by this WriteValue overload.
         /// </summary>
         public Type Type { get; }
 
@@ -23,17 +23,27 @@ namespace DynUtf8JsonWriter
         public string TypeName { get; }
 
         /// <summary>
-        /// Name of the <see cref="Utf8JsonReader"/> "Get...()" method corresponding to the type handled by this overload.
+        /// Name of the <see cref="Utf8JsonWriter"/> "Write...Value(value)" method used to write values handled by this overload.
+        /// </summary>
+        public string WriterMethodName { get; }
+
+        /// <summary>
+        /// Name of the <see cref="Utf8JsonReader"/> "Get...()" method that could be used to read values written by this overload.
         /// </summary>
         public string ReaderMethodName { get; }
 
         /// <summary>
         /// Construct an instance of <see cref="DynamicJsonWriteValueAttribute" />.
         /// </summary>
-        public DynamicJsonWriteValueAttribute(Type type, string typeName, string readerMethodName)
+        /// <param name="type"><inheritdoc cref="Type"/></param>
+        /// <param name="typeName"><inheritdoc cref="TypeName"/></param>
+        /// <param name="writerMethodName"><inheritdoc cref="WriterMethodName"/></param>
+        /// <param name="readerMethodName"><inheritdoc cref="ReaderMethodName"/></param>
+        public DynamicJsonWriteValueAttribute(Type type, string typeName, string writerMethodName, string readerMethodName)
         {
             Type = type;
             TypeName = typeName ?? throw new ArgumentNullException(nameof(typeName));
+            WriterMethodName = writerMethodName ?? throw new ArgumentNullException(nameof(writerMethodName));
             ReaderMethodName = readerMethodName ?? throw new ArgumentNullException(nameof(readerMethodName));
         }
 
