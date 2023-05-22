@@ -17,7 +17,7 @@ namespace DynUtf8JsonWriter.Tests
             using var ms = new MemoryStream();
             using (var writer = new Utf8JsonWriter(ms))
             {
-                var dynwriter = new DynamicJsonWriter(writer);
+                DynamicJsonWriter dynwriter = new SimpleDynamicJsonWriter(writer);
                 writer.WriteStartArray();
 
                 var dyntypes = new List<string>();
@@ -44,7 +44,30 @@ namespace DynUtf8JsonWriter.Tests
         }
 
         [Test]
-        public void VerifyFallbackImplementation_FallsBack()
+        public void VerifyAdditionalTypes_UsingWriteValue()
+        {
+            using var ms = new MemoryStream();
+            using (var writer = new Utf8JsonWriter(ms))
+            {
+                var dynwriter = new TestDynamicJsonWriter(writer);
+                writer.WriteStartArray();
+
+                dynamic? dyn = null;
+                Assert.That(dynwriter.WriteDynamic(dyn), Is.Null);
+                dyn = "somestring";
+                Assert.That(dynwriter.WriteDynamic(dyn), Is.EqualTo("string"));
+                dyn = ("some", 12345678);
+                Assert.That(dynwriter.WriteDynamic(dyn), Is.EqualTo("TEST ADDITIONAL WRITEVALUE METHOD"));
+
+                writer.WriteEndArray();
+            }
+
+            var longjson = Encoding.UTF8.GetString(ms.ToArray());
+            Assert.That(longjson, Is.EqualTo(@"[null,""somestring"",[""some"",12345678]]"));
+        }
+
+        [Test]
+        public void VerifyAdditionalTypes_UsingWriteFallback()
         {
             using var ms = new MemoryStream();
             using (var writer = new Utf8JsonWriter(ms))
