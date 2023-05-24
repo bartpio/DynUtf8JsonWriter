@@ -73,5 +73,20 @@ namespace DynUtf8JsonWriter
         /// <exception cref="NotImplementedException">Always thrown from the base <see cref="DynamicJsonWriter" /> implementation.</exception>
         protected virtual string WriteFallback(object value) =>
             throw new NotImplementedException($"{nameof(DynamicJsonWriter)}.{nameof(WriteFallback)} not implemented to handle type {value?.GetType().Name}");
+
+        #region Auxiliary Types
+
+        /// <summary>
+        /// Write <see cref="DBNull"/> to the wrapped writer as a JSON null token.
+        /// </summary>
+        /// <param name="value">DBNull value.</param>
+        /// <returns>The name of the type that the value was interpreted as, which in this case is "DBNull".</returns>
+        public string WriteValue(DBNull value)
+        {
+            Writer.WriteNullValue();
+            return nameof(DBNull);
+        }
+
+        #endregion
     }
 }

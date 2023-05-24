@@ -12,7 +12,7 @@ namespace DynUtf8JsonWriter.Tests
                 .OrderBy(meth => meth.GetParameters().Single().ParameterType.Name)
                 .ToList();
 
-            Assert.That(methods.Count, Is.EqualTo(13));
+            Assert.That(methods.Count, Is.EqualTo(14));
 
             using var ms = new MemoryStream();
             using (var writer = new Utf8JsonWriter(ms))
@@ -34,13 +34,13 @@ namespace DynUtf8JsonWriter.Tests
                 }
 
                 var dyntypesjoined = string.Join(";", dyntypes);
-                Assert.That(dyntypesjoined, Is.EqualTo("bool;DateTime;DateTimeOffset;decimal;double;Guid;int;long;(null);float;(null);uint;ulong"));
+                Assert.That(dyntypesjoined, Is.EqualTo("bool;DateTime;DateTimeOffset;(null);decimal;double;Guid;int;long;(null);float;(null);uint;ulong"));
 
                 writer.WriteEndArray();
             }
 
             var longjson = Encoding.UTF8.GetString(ms.ToArray());
-            Assert.That(longjson, Is.EqualTo(@"[false,""0001-01-01T00:00:00"",""0001-01-01T00:00:00+00:00"",0,0,""00000000-0000-0000-0000-000000000000"",0,0,null,0,null,0,0]"));
+            Assert.That(longjson, Is.EqualTo(@"[false,""0001-01-01T00:00:00"",""0001-01-01T00:00:00+00:00"",null,0,0,""00000000-0000-0000-0000-000000000000"",0,0,null,0,null,0,0]"));
         }
 
         [Test]

@@ -33,7 +33,11 @@ The library provides support for:
  - `uint`
  - `ulong`
 
-## Additional Types
+## DBNull
+
+ `System.DBNull` is supported, and is serialized to JSON `null`.
+
+## Adding support for Additional Types
 
 To add support for additional types, derive a subclass from `DynamicJsonWriter`, and use one of the following approaches.
 
