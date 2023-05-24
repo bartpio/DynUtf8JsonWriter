@@ -12,7 +12,7 @@ namespace DynUtf8JsonWriter.Tests
                 .OrderBy(meth => meth.GetParameters().Single().ParameterType.Name)
                 .ToList();
 
-            Assert.That(methods.Count, Is.EqualTo(15));
+            Assert.That(methods.Count, Is.EqualTo(16));
 
             using var ms = new MemoryStream();
             using (var writer = new Utf8JsonWriter(ms))
@@ -34,13 +34,13 @@ namespace DynUtf8JsonWriter.Tests
                 }
 
                 var dyntypesjoined = string.Join(";", dyntypes);
-                Assert.That(dyntypesjoined, Is.EqualTo("bool;DateOnly;DateTime;DateTimeOffset;(null);decimal;double;Guid;int;long;(null);float;(null);uint;ulong"));
+                Assert.That(dyntypesjoined, Is.EqualTo("bool;(null);DateOnly;DateTime;DateTimeOffset;(null);decimal;double;Guid;int;long;(null);float;(null);uint;ulong"));
 
                 writer.WriteEndArray();
             }
 
             var longjson = Encoding.UTF8.GetString(ms.ToArray());
-            Assert.That(longjson, Is.EqualTo(@"[false,""0001-01-01"",""0001-01-01T00:00:00"",""0001-01-01T00:00:00+00:00"",null,0,0,""00000000-0000-0000-0000-000000000000"",0,0,null,0,null,0,0]"));
+            Assert.That(longjson, Is.EqualTo(@"[false,null,""0001-01-01"",""0001-01-01T00:00:00"",""0001-01-01T00:00:00+00:00"",null,0,0,""00000000-0000-0000-0000-000000000000"",0,0,null,0,null,0,0]"));
         }
 
         [Test]
@@ -87,6 +87,24 @@ namespace DynUtf8JsonWriter.Tests
 
             var longjson = Encoding.UTF8.GetString(ms.ToArray());
             Assert.That(longjson, Is.EqualTo(@"[null,""somestring"",123]"));
+        }
+
+        [Test]
+        public void VerifyBase64_UsingWriteValue()
+        {
+            using var ms = new MemoryStream();
+            using (var writer = new Utf8JsonWriter(ms))
+            {
+                var dynwriter = new TestDynamicJsonWriter(writer);
+                writer.WriteStartArray();
+
+                dynamic? dyn = Encoding.ASCII.GetBytes("ABCD");
+                Assert.That(dynwriter.WriteDynamic(dyn), Is.EqualTo("byte[]"));
+                writer.WriteEndArray();
+            }
+
+            var longjson = Encoding.UTF8.GetString(ms.ToArray());
+            Assert.That(longjson, Is.EqualTo(@"[""QUJDRA==""]"));
         }
     }
 }

@@ -98,6 +98,17 @@ namespace DynUtf8JsonWriter
             return nameof(DateOnly);
         }
 
+        /// <summary>
+        /// Write byte array to the wrapped writer as a Base64 encoded string.
+        /// </summary>
+        /// <param name="value">Byte array value.</param>
+        /// <returns>The name of the type that the value was interpreted as, which in this case is "byte[]".</returns>
+        public string WriteValue(byte[] value)
+        {
+            Writer.WriteBase64StringValue(value);
+            return "byte[]";
+        }
+
         #endregion
         }
 }

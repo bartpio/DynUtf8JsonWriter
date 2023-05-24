@@ -41,6 +41,8 @@ The library provides support for the following types by calling the applicable "
 
 `DateOnly` is serialized to an ISO 8601 calendar date string, in `yyyy-MM-dd` format.
 
+`byte[]` is serialized to a Base64 encoded string, using `Utf8JsonWriter.WriteBase64StringValue`.
+
 ## Adding support for Additional Types
 
 To add support for additional types, derive a subclass from `DynamicJsonWriter`, and use one of the following approaches.
