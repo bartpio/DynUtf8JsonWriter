@@ -87,6 +87,17 @@ namespace DynUtf8JsonWriter
             return nameof(DBNull);
         }
 
+        /// <summary>
+        /// Write <see cref="DateOnly"/> to the wrapped writer as an ISO 8601 calendar date string (in yyyy-MM-dd format).
+        /// </summary>
+        /// <param name="value">DateOnly value.</param>
+        /// <returns>The name of the type that the value was interpreted as, which in this case is "DateOnly".</returns>
+        public string WriteValue(DateOnly value)
+        {
+            Writer.WriteStringValue(value.ToString("yyyy-MM-dd"));
+            return nameof(DateOnly);
+        }
+
         #endregion
-    }
+        }
 }

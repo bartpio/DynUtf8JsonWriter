@@ -18,7 +18,9 @@ Instantiate `SimpleDynamicJsonWriter` (an implementation of `DynamicJsonWriter` 
 
 ## Supported Types
 
-The library provides support for:
+### Native Utf8JsonWriter Types
+
+The library provides support for the following types by calling the applicable "Write...Value" method on Utf8JsonWriter:
 
  - `string`
  - `bool`
@@ -33,9 +35,11 @@ The library provides support for:
  - `uint`
  - `ulong`
 
-## DBNull
+### Auxiliary Types
 
- `System.DBNull` is supported, and is serialized to JSON `null`.
+`DBNull` is serialized to JSON `null`.
+
+`DateOnly` is serialized to an ISO 8601 calendar date string, in `yyyy-MM-dd` format.
 
 ## Adding support for Additional Types
 
